@@ -1,0 +1,12 @@
+<launch>
+
+<include file="$(find mystery_package)/launch/launch_mystery.launch"/>
+
+    <group ns="homework2">
+
+    <node pkg="hw2_package" name="talker" type="talker.py"/>
+    <node pkg="hw2_package" name="listener" type="listener.py"/>
+
+    </group>
+
+</launch>
