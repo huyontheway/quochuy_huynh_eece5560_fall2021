@@ -2,7 +2,7 @@
 
 <include file="$(find mystery_package)/launch/launch_mystery.launch"/>
 
-    <group ns="homework2">
+    <group ns="homework3">
 
     <node pkg="hw2_package" name="talker" type="talker.py"/>
     <node pkg="hw2_package" name="hw3_node" type="hw3_node.py"/>
