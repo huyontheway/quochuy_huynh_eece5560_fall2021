@@ -14,7 +14,7 @@
     <group ns="homework4">
     
     <node pkg="hw2_package" name="hw4_node" type="hw4_node.py"/>
-
+    <param name="smoots" type="double" value ="1.7018"/>
 
     </group>
 
