@@ -1,0 +1,12 @@
+<launch>
+
+<include file="$(find odometry_hw)/launch/odom_hw.launch"/>
+
+    <group ns="homework6">
+
+    <node pkg="hw6_package" name="hw6_node" type="hw6_node.py"/>
+    <param name="output_to_file" type="string" value ="true"/>
+
+    </group>
+
+</launch>
