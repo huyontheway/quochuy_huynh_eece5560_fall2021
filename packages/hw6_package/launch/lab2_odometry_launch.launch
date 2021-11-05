@@ -1,0 +1,11 @@
+<launch>
+
+<include file="$(find lab2_package)/launch/lab2_launch.launch"/>
+
+    <group ns="homework6">
+
+    <node pkg="hw6_package" name="lab2_odometry" type="lab2_odometry.py"/>
+
+    </group>
+
+</launch>
