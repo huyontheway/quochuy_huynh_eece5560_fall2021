@@ -31,17 +31,22 @@ class HW7:
         
         # Filter white image
         image_hsv = cv2.cvtColor(crop_img,cv2.COLOR_BGR2HSV)
-        img_white = cv2.inRange(image_hsv,(0,0,20),(180,25,255))  
+        img_white = cv2.inRange(image_hsv,(0,0,20),(180,30,255))  
         
-        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
-        image_erode = cv2.erode(img_white, kernel)
-        
-        ros_white = self.bridge.cv2_to_imgmsg(image_erode, "mono8")
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5,5))
+        image_erode_white = cv2.erode(img_white, kernel)
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9,9))
+        image_dilate_white = cv2.dilate(image_erode_white, kernel)
+        ros_white = self.bridge.cv2_to_imgmsg(image_dilate_white, "mono8")
         self.pub_white.publish(ros_white)
         
         # Filter yellow image         
-        img_yellow = cv2.inRange(image_hsv,(28,150,20),(32,255,255))        
-        ros_yellow = self.bridge.cv2_to_imgmsg(img_yellow, "mono8")
+        img_yellow = cv2.inRange(image_hsv,(28,150,20),(32,255,255))  
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
+        image_erode_yellow = cv2.erode(img_yellow, kernel)
+        kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (9,9))
+        image_dilate_yellow = cv2.dilate(image_erode_yellow, kernel)   
+        ros_yellow = self.bridge.cv2_to_imgmsg(image_dilate_yellow, "mono8")
         self.pub_yellow.publish(ros_yellow)
         
 

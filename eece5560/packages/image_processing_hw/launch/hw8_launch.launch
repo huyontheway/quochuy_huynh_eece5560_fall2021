@@ -1,0 +1,7 @@
+<launch>
+
+<include file="$(find image_processing_hw)/launch/hw7_launch.launch"/>
+
+    <node pkg="image_processing_hw" name="hw8_node" type="hw8_node.py"/>
+
+</launch>
