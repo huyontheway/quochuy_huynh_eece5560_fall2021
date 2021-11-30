@@ -88,10 +88,10 @@ class Lab2_Odometry:
         
         #Calculate new x, y and theta
         self.delta_s = (self.delta_s_l + self.delta_s_r)/2
-        self.delta_theta = (self.delta_s_r - self.delta_s_l)/(2*self.baseline)
+        self.delta_theta = (self.delta_s_r - self.delta_s_l)/self.baseline
         
-        self.delta_x = self.delta_s * math.cos(self.prev_theta + self.delta_theta/2)
-        self.delta_y = self.delta_s * math.sin(self.prev_theta + self.delta_theta/2)
+        self.delta_x = self.delta_s * math.cos(self.prev_theta + (self.delta_theta/2))
+        self.delta_y = self.delta_s * math.sin(self.prev_theta + (self.delta_theta/2))
         
         self.new_x = self.prev_x + self.delta_x
         self.prev_x = self.new_x
@@ -109,7 +109,7 @@ class Lab2_Odometry:
 
         rospy.loginfo("Pose y is %lf", self.new_y)
 
-        rospy.loginfo("Pose theta is %lf", self.new_theta)
+        rospy.loginfo("Pose theta is %lf", self.new_theta * 180 / math.pi)
         
         self.pub.publish(self.pub_pose)
         
