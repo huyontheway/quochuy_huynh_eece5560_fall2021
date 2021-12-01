@@ -17,11 +17,6 @@ class Lab3:
         rospy.Subscriber("/huyduckiebot/camera_node/image/compressed", CompressedImage, self.lanefilter, queue_size=1, buff_size=2**24)
         self.pub_hough = rospy.Publisher("image_lines_all", Image, queue_size=10)
         self.pub_ground = rospy.Publisher("/huyduckiebot/line_detector_node/segment_list", SegmentList, queue_size=10)
-        self.pub_edgew = rospy.Publisher("white_edge", Image, queue_size=10)
-        self.pub_edgey = rospy.Publisher("yellow_edge", Image, queue_size=10)
-        self.pub_edge = rospy.Publisher("edge", Image, queue_size=10)
-        self.pub_yellow = rospy.Publisher("yellow", Image, queue_size=10)
-        self.pub_white = rospy.Publisher("white", Image, queue_size=10)
         
         
     def lanefilter(self, msg):    
@@ -35,22 +30,18 @@ class Lab3:
         
         # Filter white image
         image_hsv = cv2.cvtColor(cropped_image,cv2.COLOR_BGR2HSV)
-        img_white = cv2.inRange(image_hsv,(0,0,20),(180,30,255))  
+        img_white = cv2.inRange(image_hsv,(0,0,20),(180,35,255))  
         
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
         image_erode_white = cv2.erode(img_white, kernel)
         image_dilate_white = cv2.dilate(image_erode_white, kernel)
-        self.output_white = self.bridge.cv2_to_imgmsg(image_dilate_white, "mono8")
-        self.pub_white.publish(self.output_white)
         
         # Filter yellow image         
-        img_yellow = cv2.inRange(image_hsv,(26,100,20),(33,255,255))  
+        img_yellow = cv2.inRange(image_hsv,(24,80,20),(35,255,255))  
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (3,3))
         image_erode_yellow = cv2.erode(img_yellow, kernel)
         kernel = cv2.getStructuringElement(cv2.MORPH_ELLIPSE, (5,5))
         image_dilate_yellow = cv2.dilate(image_erode_yellow, kernel) 
-        self.output_yellow = self.bridge.cv2_to_imgmsg(image_dilate_yellow, "mono8")
-        self.pub_yellow.publish(self.output_yellow)
         
         # Edge detection using Canny with the crop image
         self.gray_crop = cv2.cvtColor(cropped_image,cv2.COLOR_BGR2GRAY)
@@ -60,23 +51,17 @@ class Lab3:
         #self.lower = int(max(0, (1.0 - self.sigma) * self.median))
         #self.upper = int(min(255, (1.0 + self.sigma) * self.median))
         
-        self.crop_canny = cv2.Canny(self.gray_crop,70,210)
-        self.output_edge = self.bridge.cv2_to_imgmsg(self.crop_canny, "mono8")
-        self.pub_edge.publish(self.output_edge)
+        self.crop_canny = cv2.Canny(self.gray_crop,80,210)
         
         # Bitwise between the crop image with edge detection and filtered image with white line
         self.output_image_white = cv2.bitwise_and(image_dilate_white, self.crop_canny)
-        self.output_white_edge = self.bridge.cv2_to_imgmsg(self.output_image_white, "mono8")
-        self.pub_edgew.publish(self.output_white_edge)
         
         # Bitwise between the crop image with edge detection and filtered image with yellow line
         self.output_image_yellow = cv2.bitwise_and(image_dilate_yellow, self.crop_canny)
-        self.output_yellow_edge = self.bridge.cv2_to_imgmsg(self.output_image_yellow, "mono8")
-        self.pub_edgey.publish(self.output_yellow_edge)
         
         # Hough transform
-        self.hough_white = cv2.HoughLinesP(self.output_image_white,5,math.pi/180.0, 40, np.array([]),0,0)
-        self.hough_yellow = cv2.HoughLinesP(self.output_image_yellow,5,math.pi/180.0,40,np.array([]),0,0)
+        self.hough_white = cv2.HoughLinesP(self.output_image_white,7,math.pi/180.0, 40,0.02,1)
+        self.hough_yellow = cv2.HoughLinesP(self.output_image_yellow,5,math.pi/180.0,40,0.02,1)
         
         self.crop_copy = np.copy(cropped_image)
         
@@ -125,20 +110,20 @@ class Lab3:
                 
                 x1,y1,x2,y2 = line1[0]
                 
-                x1 = np.nan_to_num(x1)
+                #x1 = np.nan_to_num(x1)
 
-                y1 = np.nan_to_num(y1)
+                #y1 = np.nan_to_num(y1)
 
-                x2 = np.nan_to_num(x2)
+                #x2 = np.nan_to_num(x2)
 
-                y2 = np.nan_to_num(y2) 
-                
-                self.segment.color = 0
+                #y2 = np.nan_to_num(y2) 
                 self.segment.pixels_normalized[0].x = x1
                 self.segment.pixels_normalized[0].y = y1
                 self.segment.pixels_normalized[1].x = x2
                 self.segment.pixels_normalized[1].y = y2
-                
+                    
+                self.segment.color = 0
+                    
                 self.pub_segmentlist.segments.append(self.segment)
                 
         if self.hough_yellow is not None:
@@ -153,26 +138,27 @@ class Lab3:
                 
                 x1,y1,x2,y2 = line2[0]
                 
-                x1 = np.nan_to_num(x1)
+                #x1 = np.nan_to_num(x1)
 
-                y1 = np.nan_to_num(y1)
+                #y1 = np.nan_to_num(y1)
 
-                x2 = np.nan_to_num(x2)
+                #x2 = np.nan_to_num(x2)
 
-                y2 = np.nan_to_num(y2) 
-                
-                
-                self.segment.color = 1
+                #y2 = np.nan_to_num(y2) 
                 self.segment.pixels_normalized[0].x = x1
                 self.segment.pixels_normalized[0].y = y1
                 self.segment.pixels_normalized[1].x = x2
                 self.segment.pixels_normalized[1].y = y2
-                
+                self.segment.color = 1
+                    
                 self.pub_segmentlist.segments.append(self.segment)
+                rospy.loginfo("Publishing segments to ground projection.")
+                self.pub_ground.publish(self.pub_segmentlist) 
+                
         
-        if self.hough_yellow is not None or self.hough_white is not None:
-            rospy.loginfo("Publishing segments to ground projection.")
-            self.pub_ground.publish(self.pub_segmentlist)  
+        #if self.hough_yellow is not None or self.hough_white is not None:
+        #    rospy.loginfo("Publishing segments to ground projection.")
+        #    self.pub_ground.publish(self.pub_segmentlist)  
             
                   
 if __name__=="__main__":
