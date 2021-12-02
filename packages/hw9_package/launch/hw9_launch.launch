@@ -1,0 +1,8 @@
+<launch>
+
+<include file="$(find controls_hw)/launch/start_dynamics.launch"/>
+
+    <node pkg="hw9_package" name="hw9_node" type="hw9_node.py"/>
+    <param name="controller_ready" type="string" value ="true"/>
+
+</launch>
