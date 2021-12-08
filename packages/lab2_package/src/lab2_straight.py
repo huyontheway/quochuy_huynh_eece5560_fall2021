@@ -19,11 +19,11 @@ class Lab2Node:
         if msg.state == "LANE_FOLLOWING" and self.mode == False:
             if rospy.get_param("route") == "line":
                 self.mode = True
-                self.pub_cmd.v = 0.5
+                self.pub_cmd.v = 0.35
                 self.pub_cmd.omega = 0
                 self.pub.publish(self.pub_cmd)
                 
-                rospy.sleep(5.7)
+                rospy.sleep(5.8)
                 
                 self.pub_cmd.v = 0
                 self.pub.publish(self.pub_cmd)
@@ -31,11 +31,11 @@ class Lab2Node:
             elif rospy.get_param("route") == "square":
                 for x in range(4):
                     self.mode = True
-                    self.pub_cmd.v = 0.5
+                    self.pub_cmd.v = 0.35
                     self.pub_cmd.omega = 0
                     self.pub.publish(self.pub_cmd)
                     
-                    rospy.sleep(5.5)
+                    rospy.sleep(5.6)
                     
                     self.pub_cmd.v = 0
                     self.pub.publish(self.pub_cmd)    
@@ -55,10 +55,10 @@ class Lab2Node:
                     
             elif rospy.get_param("route") == "circle":
                 self.mode = True
-                self.pub_cmd.v = 0.6 #Set v = 0.6 m/s
-                self.pub_cmd.omega = 4.3 #omega = 6 rad/s
+                self.pub_cmd.v = 0.35 #Set v = 0.6 m/s
+                self.pub_cmd.omega = 2.8 #omega = 6 rad/s
                 self.pub.publish(self.pub_cmd)
-                rospy.sleep(12.5)
+                rospy.sleep(14.5)
                 
                 self.pub_cmd.v = 0
                 self.pub_cmd.omega = 0

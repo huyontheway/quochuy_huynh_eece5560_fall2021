@@ -2,7 +2,7 @@
 
     <group ns="$(env VEHICLE_NAME)">  
         <node pkg="lab2_package" name="lab2_straight" type="lab2_straight.py"/>
-        <param name="route" type="str" value ="line"/>
+        <param name="route" type="str" value ="circle"/>
     </group>
 
 <include file="$(find fsm)/launch/fsm_node.launch">
