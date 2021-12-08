@@ -26,14 +26,14 @@ class PID_Control():
         
         #Calculate integral
         #self.error_sum += self.current_e * (self.current_time - self.prev_time)
-        #self.i = self.k_i * self.error_sum
-        self.i = self.i + (self.k_i * self.p)
+        self.i = self.i + self.current_e * (self.current_time - self.prev_time)
+        #self.i = self.i + (self.k_i * self.p)
         
         #Calculate derivative
         self.d = self.k_d * (self.current_e - self.prev_e)/(self.current_time - self.prev_time )
         
         #Result
-        self.result = self.p + self.i + self.d
+        self.result = self.p + self.k_i * self.i + self.d
         
         self.prev_e = self.current_e
         self.prev_time = self.current_time
