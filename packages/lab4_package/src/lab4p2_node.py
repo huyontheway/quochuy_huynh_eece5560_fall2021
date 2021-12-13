@@ -1,8 +1,6 @@
 #!/usr/bin/env python3
 
 import rospy
-import math
-from std_msgs.msg import Float32
 from duckietown_msgs.msg import Twist2DStamped,LanePose
 from lab4_package.src import pid_class
 from pid_class import PID_Control
@@ -14,20 +12,20 @@ class Lab4_Part2:
         self.pub = rospy.Publisher("/huyduckiebot/lane_controller_node/car_cmd", Twist2DStamped, queue_size=10)
         
         self.pub_cmd = Twist2DStamped()
-        self.pub_cmd.v = 0.25
+        self.pub_cmd.v = 0.15
         self.pub_cmd.omega = 0
         
         # Initialize PID control for d
         self.pid_d = PID_Control()
-        self.pid_d.k_p = 0
-        self.pid_d.k_i = 0
-        self.pid_d.k_d = 0
+        self.pid_d.k_p = 4.0
+        #self.pid_d.k_i = 0
+        #self.pid_d.k_d = 0
         
         # Initialize PID control for phi
         self.pid_phi = PID_Control()
-        self.pid_phi.k_p = 0
-        self.pid_phi.k_i = 0
-        self.pid_phi.k_d = 0
+        self.pid_phi.k_p = 4.0
+        #self.pid_phi.k_i = 0
+        #self.pid_phi.k_d = 0
         
     def callback(self, msg):
         # Set gains for each PID controller from param
@@ -35,17 +33,17 @@ class Lab4_Part2:
             self.value = rospy.get_param("k_p_d")
             self.pid_d.k_p = self.value
             
-        if rospy.has_param("k_i_d"):
-            self.value = rospy.get_param("k_i_d")
-            self.pid_d.k_i = self.value
+        #if rospy.has_param("k_i_d"):
+        #    self.value = rospy.get_param("k_i_d")
+        #    self.pid_d.k_i = self.value
             
         if rospy.has_param("k_p_phi"):
             self.value = rospy.get_param("k_p_phi")
             self.pid_phi.k_p = self.value
         
-        if rospy.has_param("k_i_phi"):
-            self.value = rospy.get_param("k_i_phi")
-            self.pid_phi.k_i = self.value
+        #if rospy.has_param("k_i_phi"):
+        #    self.value = rospy.get_param("k_i_phi")
+        #    self.pid_phi.k_i = self.value
         
         
         # Get the current error for d = d_ref - d
